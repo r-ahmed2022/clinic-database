@@ -1,59 +1,67 @@
-CREATE TABLE patients (
-    id  SERIAL PRIMARY KEY,
-    name varchar(100),
-    date_of_birth date
-)
+CREATE TABLE IF NOT EXISTS patients 
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    name varchar(50) NOT NULL,
+    date_of_birth date NOT NULL,
+    CONSTRAINT patient_pkey PRIMARY KEY (id)
+);
 
-CREATE TABLE medical_histories (
-    id  SERIAL PRIMARY KEY,
-    admitted_at timestamp,
-    patient_id int,
-    status varchar(100)
-)
+CREATE TABLE IF NOT EXISTS medical_histories 
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    admitted_at timestamp not null,
+    patient_id integer not null,
+    status varchar (30) null,
+    CONSTRAINT medical_histories_pkey PRIMARY KEY (id),
+    CONSTRAINT patient_medical_hist_fkey FOREIGN KEY (patient_id) REFERENCES patients (id)
+);
 
-CREATE TABLE invoices (
-    id  SERIAL PRIMARY KEY,
-    total_amount decimal(10,2),
-    generated_at timestamp,
-    payed_at timestamp,
-    medical_history_id int
-)
+ CREATE TABLE IF NOT EXISTS invoices 
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    total_amount decimal not null,
+    generated_at timestamp not null,
+    payed_at timestamp not null,
+    medical_history__id integer not null,
+    CONSTRAINT invoice_pkey PRIMARY KEY (id),
+    CONSTRAINT medical_hist_fkey FOREIGN KEY (medical_history__id) REFERENCES medical_histories (id)
+);
 
-CREATE TABLE treatments (
-    id  SERIAL PRIMARY KEY,
-    type varchar(100),
-    name varchar(100),
-)
+CREATE TABLE IF NOT EXISTS invoice_items
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    unit_price decimal not null,
+    quantity integer not null,
+    total_price decimal not null,
+    invoice_id integer not null,
+    treatment_id integer not null,
+    CONSTRAINT invoice_items_pkey PRIMARY KEY (id),
+    CONSTRAINT invoices_fkey FOREIGN KEY (invoice_id) REFERENCES invoices (id)
+);
 
 
-CREATE TABLE invoice_items (
-    id  SERIAL PRIMARY KEY,
-    unit_price decimal(10,2),
-    quantity int,
-    total_price decimal(10,2),
-    invoice_id int,
-    treatment_id int
-)
+CREATE TABLE IF NOT EXISTS treatments
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    type varchar (30) not null,
+    name varchar (50) not null,
+    CONSTRAINT treatment_pkey PRIMARY KEY (id)
+);
 
-create TABLE patient_treatments (
-    id SERIAL PRIMARY KEY,
-    patient_id int,
-    treatment_id int,
-    FOREIGN KEY ( patient_id) REFERENCES patients(id),
-    FOREIGN KEY (treatment_id) REFERENCES treatments(id)
-)
+ALTER TABLE invoice_items ADD CONSTRAINT treatments_fkey FOREIGN KEY (treatment_id) REFERENCES treatments (id);
 
-CREATE TABLE patient_medical_histories (
-    id SERIAL PRIMARY KEY,
-    patient_id int,
-    medical_histories_id INT,
-    FOREIGN KEY (medical_histories_id) REFERENCES medical_histories(id),
-    FOREIGN KEY (patient_id) REFERENCES patients(id)
-)
+CREATE TABLE IF NOT EXISTS medicalHist_treatments (
+    treatment_id integer not null,
+    medical_historeis_id integer not null,
+    CONSTRAINT medicalHist_treatments_compkey PRIMARY KEY (treatment_id,medical_historeis_id),
+    CONSTRAINT medical_history_fkey FOREIGN KEY (medical_historeis_id) REFERENCES medical_histories (id),
+    CONSTRAINT treatments_fkey FOREIGN KEY (treatment_id) REFERENCES treatments (id)
+);
 
-CREATE INDEX invoice_id_indx ON invoice_items(invoice_id);
-CREATE INDEX treatment_id_indx ON invoice_items(treatment_id);
-CREATE INDEX patient_id_indx ON medical_histories(patient_id);
 CREATE INDEX medical_history__id_indx ON invoices(medical_history__id);
+CREATE INDEX invoice_id_indx ON invoice_items(invoice_id);
+CREATE INDEX patient_id_indx ON medical_histories(patient_id);
+CREATE INDEX medhist_treatment_id_indx ON medicalHist_treatments(treatment_id);
+CREATE INDEX treatment_id_indx ON invoice_items(treatment_id);
 CREATE INDEX medical_historeis_id_indx ON medicalHist_treatments(medical_historeis_id);
- CREATE INDEX medhist_treatment_id_indx ON medicalHist_treatments(treatment_id);
+    
