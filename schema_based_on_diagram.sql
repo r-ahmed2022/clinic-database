@@ -22,7 +22,7 @@ CREATE TABLE invoices (
 CREATE TABLE treatments (
     id  SERIAL PRIMARY KEY,
     type varchar(100),
-    name varchar(100),
+    name varchar(100)
 )
 
 
