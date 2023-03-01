@@ -182,8 +182,10 @@ Example:
 
 👤 **Donald Akite**
 
-- GitHub: [@r-ahmed2022](https://github.com/)
-- LinkedIn: [Linkedin](https://www.linkedin.com/in/)
+- GitHub: [@githubhandle](https://github.com/quavo19)
+- Twitter: [@twitterhandle](https://twitter.com/DonaldAkite)
+- LinkedIn: [LinkedIn](https://www.linkedin.com/in/donald-akite-299a31222/)
+
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
