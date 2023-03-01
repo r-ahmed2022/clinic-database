@@ -35,3 +35,18 @@ CREATE TABLE invoice_items (
     treatment_id int
 )
 
+create TABLE patient_treatments (
+    id SERIAL PRIMARY KEY,
+    patient_id int,
+    treatment_id int,
+    FOREIGN KEY ( patient_id) REFERENCES patients(id),
+    FOREIGN KEY (treatment_id) REFERENCES treatments(id)
+)
+
+CREATE TABLE patient_medical_histories (
+    id SERIAL PRIMARY KEY,
+    patient_id int,
+    medical_histories_id INT,
+    FOREIGN KEY (medical_histories_id) REFERENCES medical_histories(id),
+    FOREIGN KEY (patient_id) REFERENCES patients(id)
+)
